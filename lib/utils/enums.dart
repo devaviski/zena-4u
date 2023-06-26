@@ -63,3 +63,13 @@ enum KCategory {
   sports,
   technology,
 }
+
+enum KContinent {
+  usa,
+  africa,
+  asia,
+  australia,
+  europe,
+  northAmerica,
+  southAmerica,
+}

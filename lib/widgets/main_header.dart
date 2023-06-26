@@ -72,8 +72,8 @@ class MainHeader extends ConsumerWidget {
                       );
                   onRefreshPage(
                     ref.read(newsProvider.notifier).fetchNews(
-                          activeCountry,
-                          categories[i],
+                          country: activeCountry,
+                          category: categories[i],
                         ),
                   );
                 },

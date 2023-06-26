@@ -18,8 +18,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   late Future<void> _initialState;
   @override
   void initState() {
-    _initialState =
-        ref.read(newsProvider.notifier).fetchNews(null, categories[0]);
+    _initialState = ref.read(newsProvider.notifier).fetchNews(
+          country: 'us',
+          category: categories[0],
+        );
     super.initState();
   }
 
@@ -35,7 +37,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final initIndex = allNews.length - 7 < 0 ? 0 : allNews.length - 7;
     final newNews = List.of(allNews.sublist(initIndex));
     return Scaffold(
-      drawer: const MainDrawer(),
+      drawer: MainDrawer(
+        onPageRefresh: _refreshPage,
+      ),
       appBar: AppBar(
         title: const Text('Top Headlines'),
       ),

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zena_foru/data/data.dart';
+import 'package:zena_foru/widgets/drawer_item_list.dart';
+import 'package:zena_foru/widgets/drawer_listtile.dart';
 
-class MainDrawer extends StatelessWidget {
-  const MainDrawer({super.key});
+class MainDrawer extends ConsumerWidget {
+  const MainDrawer({super.key, required this.onPageRefresh});
+  final void Function(Future<void> initialState) onPageRefresh;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
       child: SingleChildScrollView(
         child: Column(
@@ -16,36 +20,19 @@ class MainDrawer extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
             ),
-            ...countries.map(
-              (country) => ListTile(
-                leading: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 2),
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    gradient: RadialGradient(
-                      colors: [
-                        Colors.orange.withOpacity(0.1),
-                        Colors.orange.withOpacity(0.5),
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      country.fullName[0],
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge!
-                          .copyWith(fontSize: 18),
-                    ),
-                  ),
-                ),
-                title: Text(
-                  country.fullName,
-                ),
-              ),
-            ),
+            ...continents.entries.map((continent) {
+              if (continent.value.countries.length == 1) {
+                return DrawerListTile(
+                  country: continent.value.countries[0],
+                  onCountryCahnge: onPageRefresh,
+                );
+              }
+              return DrawerItemList(
+                countries: continent.value.countries,
+                continentName: continent.value.name,
+                onCountryCahnge: onPageRefresh,
+              );
+            })
           ],
         ),
       ),

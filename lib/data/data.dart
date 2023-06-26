@@ -1,4 +1,5 @@
 import 'package:zena_foru/model/category.dart';
+import 'package:zena_foru/model/continent.dart';
 import 'package:zena_foru/model/country.dart' as country;
 import 'package:zena_foru/utils/enums.dart';
 
@@ -33,108 +34,143 @@ final categories = [
   ),
 ];
 
-final countries = [
+final Map<KContinent, Continent> continents = {
+  KContinent.usa: Continent.usa(),
+  KContinent.africa: Continent.africa(),
+  KContinent.asia: Continent.asia(),
+  KContinent.australia: Continent.australia(),
+  KContinent.europe: Continent.europe(),
+  KContinent.northAmerica: Continent.northAmerica(),
+  KContinent.southAmerica: Continent.southAmerica(),
+};
+
+final List<country.Country> usas = [
   country.Country(
     fullName: 'USA',
-    shortNames: ['us'],
+    shortName: 'us',
+  )
+];
+final List<country.Country> africas = [
+  country.Country(
+    fullName: 'Egypt',
+    shortName: 'eg',
   ),
   country.Country(
-    fullName: 'Britain',
-    shortNames: ['gb'],
+    fullName: 'Morocco',
+    shortName: 'ma',
   ),
   country.Country(
-    fullName: 'Russia',
-    shortNames: ['ru'],
+    fullName: 'Nigeria',
+    shortName: 'ng',
   ),
   country.Country(
-    fullName: 'Ukrain',
-    shortNames: ['ua'],
+    fullName: 'South Africa',
+    shortName: 'sa',
+  ),
+  country.Country(
+    fullName: 'Zambia',
+    shortName: 'za',
+  ),
+];
+final List<country.Country> asias = [
+  country.Country(
+    fullName: 'UAE',
+    shortName: 'ae',
+  ),
+  country.Country(
+    fullName: 'Hongkong',
+    shortName: 'hk',
+  ),
+  country.Country(
+    fullName: 'Indonesia',
+    shortName: 'id',
+  ),
+  country.Country(
+    fullName: 'India',
+    shortName: 'in',
+  ),
+  country.Country(
+    fullName: 'Japan',
+    shortName: 'jp',
+  ),
+  country.Country(
+    fullName: 'South Korea',
+    shortName: 'kr',
+  ),
+  country.Country(
+    fullName: 'Thailand',
+    shortName: 'th',
+  ),
+  country.Country(
+    fullName: 'Taiwan',
+    shortName: 'tw',
   ),
   country.Country(
     fullName: 'China',
-    shortNames: ['cn'],
+    shortName: 'cn',
   ),
-  country.Country(
-    fullName: 'Africa',
-    shortNames: [
-      'ng',
-      'eg',
-      'ma',
-      'za',
-      'sa',
-    ],
-  ),
-  country.Country(
-    fullName: 'Asia',
-    shortNames: [
-      'ae',
-      'hk',
-      'id',
-      'in',
-      'jp',
-      'kr',
-      'my',
-      'ph',
-      'sg',
-      'th',
-      'tw',
-      'cn',
-    ],
-  ),
-  country.Country(
-    fullName: 'Europe',
-    shortNames: [
-      'at',
-      'be',
-      'bg',
-      'ch',
-      'cz',
-      'de',
-      'fr',
-      'gr',
-      'hu',
-      'ie',
-      'il',
-      'it',
-      'lt',
-      'lv',
-      'nl',
-      'no',
-      'nz',
-      'pl',
-      'pt',
-      'ro',
-      'rs',
-      'ru',
-      'se',
-      'si',
-      'sk',
-      'tr',
-      'ua',
-      'gb',
-    ],
-  ),
-  country.Country(
-    fullName: 'South America',
-    shortNames: [
-      'ar',
-      'br',
-      'co',
-      've',
-    ],
-  ),
+];
+final List<country.Country> australias = [
   country.Country(
     fullName: 'Australia',
-    shortNames: ['au'],
+    shortName: 'au',
+  )
+];
+final List<country.Country> europes = [
+  country.Country(
+    fullName: 'England',
+    shortName: 'gb',
   ),
   country.Country(
-    fullName: 'North America',
-    shortNames: [
-      'au',
-      'ca',
-      'cu',
-      'mx',
-      'us',
-    ],
+    fullName: 'France',
+    shortName: 'fr',
+  ),
+  country.Country(
+    fullName: 'Germany',
+    shortName: 'de',
+  ),
+  country.Country(
+    fullName: 'Italy',
+    shortName: 'it',
+  ),
+  country.Country(
+    fullName: 'Netherlands',
+    shortName: 'nl',
+  ),
+  country.Country(
+    fullName: 'Portugal',
+    shortName: 'pt',
+  ),
+];
+final List<country.Country> northAmericas = [
+  country.Country(
+    fullName: 'Canada',
+    shortName: 'ca',
+  ),
+  country.Country(
+    fullName: 'Cuba',
+    shortName: 'cu',
+  ),
+  country.Country(
+    fullName: 'Mexico',
+    shortName: 'mx',
+  ),
+];
+final List<country.Country> southAmericas = [
+  country.Country(
+    fullName: 'Argentina',
+    shortName: 'ar',
+  ),
+  country.Country(
+    fullName: 'Brazil',
+    shortName: 'br',
+  ),
+  country.Country(
+    fullName: 'Columbia',
+    shortName: 'co',
+  ),
+  country.Country(
+    fullName: 'Venezuela',
+    shortName: 've',
   ),
 ];

@@ -4,24 +4,26 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:zena_foru/model/category.dart';
-import 'package:zena_foru/model/country.dart';
 import 'package:zena_foru/model/news.dart';
 
 class NewsNotifier extends StateNotifier<List<News>> {
   NewsNotifier() : super([]);
 
-  Future<void> fetchNews(
-    Country? country,
-    Category category,
-  ) async {
-    var querryParams = {'language': 'en', 'category': category.category.name};
+  Future<void> fetchNews({
+    required String country,
+    required Category category,
+  }) async {
+    var querryParams = {
+      'country': country,
+      'category': category.category.name,
+    };
 
-    if (country != null && country.shortName == null) {
-      querryParams = {
-        ...querryParams,
-        'country': country.shortName as String,
-      };
-    }
+    // if (country != null && country.shortName != null) {
+    //   querryParams = {
+    //     ...querryParams,
+    //     'country': country.shortName as String,
+    //   };
+    // }
     final url = Uri(
         scheme: 'https',
         host: 'newsapi.org',
@@ -56,3 +58,11 @@ List<News> jsonToModel(response) {
         content: news['content']);
   }).toList();
 }
+
+// final filteredNews = Provider((ref) {
+//   final activeCountry = ref.watch(activeCountryProvider);
+//   final activeCountryShortNames = activeCountry!.shortNames;
+//   var newsFiltered = [];
+//   for (final acCounty in activeCountryShortNames) {}
+//   return null;
+// });

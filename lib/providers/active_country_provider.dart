@@ -1,14 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zena_foru/model/country.dart';
 
-class ActiveCountryNotifier extends StateNotifier<Country?> {
-  ActiveCountryNotifier() : super(null);
+class ActiveCountryNotifier extends StateNotifier<String> {
+  ActiveCountryNotifier() : super('us');
 
-  Future<void> setCountry(Country ctry) async {
+  Future<void> setCountry(String ctry) async {
     state = ctry;
   }
 }
 
 final activeCountryProvider =
-    StateNotifierProvider<ActiveCountryNotifier, Country?>(
+    StateNotifierProvider<ActiveCountryNotifier, String>(
         (ref) => ActiveCountryNotifier());
