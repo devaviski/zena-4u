@@ -15,6 +15,7 @@ class SlideshowNews extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
       items: newNews
+          .sublist(0, 10)
           .map(
             (e) => Card(
               clipBehavior: Clip.hardEdge,

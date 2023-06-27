@@ -18,10 +18,7 @@ class MainHeader extends ConsumerWidget {
     final allNews = ref.watch(newsProvider);
     final activeCategory = ref.watch(activeCategoryProvider);
     final activeCountry = ref.watch(activeCountryProvider);
-    final initIndex = allNews.length - 7 < 0 ? 0 : allNews.length - 7;
-    final newNews = List.of(allNews.sublist(initIndex));
-    newNews.sort((a, b) => a.title!.compareTo(b.title!));
-    final headerNews = allNews[allNews.length - 5 > 0 ? allNews.length - 5 : 0];
+    final headerNews = allNews['trending']![0];
     return Stack(
       children: [
         CustomFadeinImage(
@@ -71,9 +68,9 @@ class MainHeader extends ConsumerWidget {
                         categories[i],
                       );
                   onRefreshPage(
-                    ref.read(newsProvider.notifier).fetchNews(
-                          country: activeCountry,
-                          category: categories[i],
+                    ref.read(newsProvider.notifier).loadNews(
+                          query:
+                              '"$activeCountry" ${categories[i].categoryName}',
                         ),
                   );
                 },

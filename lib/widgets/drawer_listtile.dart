@@ -28,9 +28,11 @@ class DrawerListTile extends ConsumerWidget {
       onTap: () {
         Navigator.of(context).pop();
         ref.read(activeCountryProvider.notifier).setCountry(country.shortName);
-        onCountryCahnge(ref
-            .read(newsProvider.notifier)
-            .fetchNews(country: country.shortName, category: activeCategory));
+        onCountryCahnge(
+          ref.read(newsProvider.notifier).loadNews(
+                query: '"${country.fullName}" +${activeCategory.categoryName}',
+              ),
+        );
       },
     );
   }

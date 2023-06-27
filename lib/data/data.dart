@@ -78,7 +78,7 @@ final List<country.Country> asias = [
     shortName: 'ae',
   ),
   country.Country(
-    fullName: 'Hongkong',
+    fullName: 'Hong Kong',
     shortName: 'hk',
   ),
   country.Country(
@@ -140,6 +140,14 @@ final List<country.Country> europes = [
   country.Country(
     fullName: 'Portugal',
     shortName: 'pt',
+  ),
+  country.Country(
+    fullName: 'Russia',
+    shortName: 'ru',
+  ),
+  country.Country(
+    fullName: 'Ukrain',
+    shortName: 'ua',
   ),
 ];
 final List<country.Country> northAmericas = [

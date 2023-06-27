@@ -3,46 +3,85 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:zena_foru/model/category.dart';
 import 'package:zena_foru/model/news.dart';
+import 'package:zena_foru/utils/constants.dart';
 
-class NewsNotifier extends StateNotifier<List<News>> {
-  NewsNotifier() : super([]);
+class NewsNotifier extends StateNotifier<Map<String, List<News>>> {
+  NewsNotifier() : super({});
 
-  Future<void> fetchNews({
-    required String country,
-    required Category category,
+  Future<void> loadNews({
+    required String query,
   }) async {
-    var querryParams = {
-      'country': country,
-      'category': category.category.name,
-    };
+    final client = http.Client();
+    try {
+      final url = Uri(
+        scheme: 'https',
+        host: 'newsapi.org',
+        path: '/v2/everything',
+        queryParameters: {
+          'language': 'en',
+          'q': query,
+          'from': dateFormatter
+              .format(DateTime.now().subtract(const Duration(days: 5))),
+          'sortBy': 'popularity',
+        },
+      );
 
-    // if (country != null && country.shortName != null) {
-    //   querryParams = {
-    //     ...querryParams,
-    //     'country': country.shortName as String,
-    //   };
-    // }
-    final url = Uri(
+      final urlTrending = Uri(
         scheme: 'https',
         host: 'newsapi.org',
         path: '/v2/top-headlines',
-        queryParameters: querryParams);
-    var response = await http.get(url, headers: {
-      HttpHeaders.authorizationHeader: '62be7b5997b346e098f0f10724c7a06e',
-    });
-    if (response.statusCode == 200) {
-      state = jsonToModel(
-          convert.jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
+        queryParameters: {
+          'language': 'en',
+          'country': 'us',
+        },
+      );
+      // davortes2:0bafbbb4b0e544c7a905c768f33f54b6
+      //dawit:62be7b5997b346e098f0f10724c7a06e
+      var response = await client.get(
+        url,
+        headers: {
+          HttpHeaders.authorizationHeader: '0bafbbb4b0e544c7a905c768f33f54b6',
+        },
+      );
+      var responseTrending = await client.get(
+        urlTrending,
+        headers: {
+          HttpHeaders.authorizationHeader: '0bafbbb4b0e544c7a905c768f33f54b6',
+        },
+      );
+      if (response.statusCode == 200) {
+        state = {
+          ...state,
+          'normal': jsonToModel(
+            convert.jsonDecode(response.body) as Map<String, dynamic>,
+          )
+        };
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+      }
+      if (responseTrending.statusCode == 200) {
+        state = {
+          ...state,
+          'trending': jsonToModel(
+            convert.jsonDecode(responseTrending.body) as Map<String, dynamic>,
+          )
+        };
+      } else {
+        print('Request failed with status: ${responseTrending.statusCode}.');
+      }
+    } catch (e) {
+      print('Something wrong: $e');
+    } finally {
+      client.close();
     }
+    // state = await fetch(query, endpoint);
   }
 }
 
 final newsProvider =
-    StateNotifierProvider<NewsNotifier, List<News>>((ref) => NewsNotifier());
+    StateNotifierProvider<NewsNotifier, Map<String, List<News>>>(
+        (ref) => NewsNotifier());
 
 List<News> jsonToModel(response) {
   return (response['articles'] as List<dynamic>).map((article) {
@@ -58,11 +97,3 @@ List<News> jsonToModel(response) {
         content: news['content']);
   }).toList();
 }
-
-// final filteredNews = Provider((ref) {
-//   final activeCountry = ref.watch(activeCountryProvider);
-//   final activeCountryShortNames = activeCountry!.shortNames;
-//   var newsFiltered = [];
-//   for (final acCounty in activeCountryShortNames) {}
-//   return null;
-// });
