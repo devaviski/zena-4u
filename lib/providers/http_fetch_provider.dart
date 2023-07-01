@@ -6,6 +6,8 @@ import 'package:zena_foru/model/news.dart';
 import 'package:zena_foru/utils/constants.dart';
 import 'dart:convert' as convert;
 
+import 'package:zena_foru/utils/secrets.dart';
+
 List<News> jsonToModel(response) {
   return (response['articles'] as List<dynamic>).map((article) {
     final news = article as Map<String, dynamic>;
@@ -44,8 +46,8 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
         final response = await httpClient.get(
           url,
           headers: {
-            // HttpHeaders.authorizationHeader: '62be7b5997b346e098f0f10724c7a06e',
-            HttpHeaders.authorizationHeader: '0bafbbb4b0e544c7a905c768f33f54b6',
+            // HttpHeaders.authorizationHeader: newsApiDawit,
+            HttpHeaders.authorizationHeader: newsApiDavortes,
           },
         );
         if (response.statusCode == 200) {
@@ -71,8 +73,8 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
         final response = await httpClient.get(
           url,
           headers: {
-            // HttpHeaders.authorizationHeader: '62be7b5997b346e098f0f10724c7a06e',
-            HttpHeaders.authorizationHeader: '0bafbbb4b0e544c7a905c768f33f54b6',
+            // HttpHeaders.authorizationHeader: newsApiDawit,
+            HttpHeaders.authorizationHeader: newsApiDavortes,
           },
         );
         if (response.statusCode == 200) {
@@ -84,7 +86,7 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
       }
       if (locationData != null) {
         final url = Uri.parse(
-            'http://api.openweathermap.org/geo/1.0/reverse?lat=${locationData['lat']}&lon=${locationData['lon']}&appid=ad04899fa6b16c37350b1dd53926353e');
+            'http://api.openweathermap.org/geo/1.0/reverse?lat=${locationData['lat']}&lon=${locationData['lon']}&appid=$openWeatherMapApi');
         final response = await http.get(url);
         if (response.statusCode == 200) {
           state = {...state, 'location': response.body};
