@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:zena_foru/model/news.dart';
@@ -15,7 +17,7 @@ class SlideshowNews extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
       items: newNews
-          .sublist(0, 10)
+          .sublist(0, min(newNews.length, 10))
           .map(
             (e) => Card(
               clipBehavior: Clip.hardEdge,
@@ -23,7 +25,7 @@ class SlideshowNews extends StatelessWidget {
                 children: [
                   CustomFadeinImage(
                     height: 150,
-                    image: e.urlToImage != null
+                    image: e.urlToImage != null && e.urlToImage!.length > 3
                         ? NetworkImage(e.urlToImage!)
                         : null,
                   ),

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zena_foru/model/country.dart';
 import 'package:zena_foru/providers/active_category_provider.dart';
 import 'package:zena_foru/providers/active_country_provider.dart';
-import 'package:zena_foru/providers/news_provider.dart';
+import 'package:zena_foru/providers/http_fetch_provider.dart';
 
 class DrawerListTile extends ConsumerWidget {
   const DrawerListTile({
@@ -29,9 +29,17 @@ class DrawerListTile extends ConsumerWidget {
         Navigator.of(context).pop();
         ref.read(activeCountryProvider.notifier).setCountry(country.shortName);
         onCountryCahnge(
-          ref.read(newsProvider.notifier).loadNews(
-                query: '"${country.fullName}" +${activeCategory.categoryName}',
-              ),
+          // ref.read(newsProvider.notifier).loadNews(
+          //       query: '"${country.fullName}" +${activeCategory.categoryName}',
+          //     ),
+          ref.read(apisFetchProvider.notifier).fetchAPIsData(
+            headlineParams: {
+              'country': country.shortName,
+              'category': activeCategory.categoryName,
+            },
+            everythingsQuery:
+                '"${country.fullName}" +${activeCategory.categoryName}',
+          ),
         );
       },
     );

@@ -56,6 +56,10 @@ final List<country.Country> africas = [
     shortName: 'eg',
   ),
   country.Country(
+    fullName: 'Ethiopia',
+    shortName: 'et',
+  ),
+  country.Country(
     fullName: 'Morocco',
     shortName: 'ma',
   ),

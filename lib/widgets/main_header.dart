@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zena_foru/data/data.dart';
 import 'package:zena_foru/providers/active_category_provider.dart';
 import 'package:zena_foru/providers/active_country_provider.dart';
-import 'package:zena_foru/providers/news_provider.dart';
+import 'package:zena_foru/providers/http_fetch_provider.dart';
 import 'package:zena_foru/widgets/custom_fadein_image.dart';
 
 class MainHeader extends ConsumerWidget {
@@ -15,10 +15,12 @@ class MainHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allNews = ref.watch(newsProvider);
+    // final allNews = ref.watch(newsProvider);
     final activeCategory = ref.watch(activeCategoryProvider);
     final activeCountry = ref.watch(activeCountryProvider);
-    final headerNews = allNews['trending']![0];
+    final headlineNews = ref.watch(headlinesProvider);
+    final otherNews = ref.watch(allNewsProvider);
+    final headerNews = headlineNews.isNotEmpty ? headlineNews[0] : otherNews[0];
     return Stack(
       children: [
         CustomFadeinImage(
@@ -68,10 +70,18 @@ class MainHeader extends ConsumerWidget {
                         categories[i],
                       );
                   onRefreshPage(
-                    ref.read(newsProvider.notifier).loadNews(
-                          query:
-                              '"$activeCountry" ${categories[i].categoryName}',
-                        ),
+                    // ref.read(newsProvider.notifier).loadNews(
+                    //       query:
+                    //           '"$activeCountry" ${categories[i].categoryName}',
+                    //     ),
+                    ref.read(apisFetchProvider.notifier).fetchAPIsData(
+                      headlineParams: {
+                        'country': activeCountry,
+                        'category': categories[i].categoryName
+                      },
+                      everythingsQuery:
+                          '"$activeCountry" ${categories[i].categoryName}',
+                    ),
                   );
                 },
                 child: Text(
