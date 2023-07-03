@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zena_foru/data/data.dart';
+import 'package:zena_foru/model/category.dart';
+import 'package:zena_foru/model/country.dart';
 import 'package:zena_foru/providers/active_category_provider.dart';
-import 'package:zena_foru/providers/active_country_provider.dart';
 import 'package:zena_foru/providers/http_fetch_provider.dart';
 import 'package:zena_foru/widgets/custom_fadein_image.dart';
 
@@ -11,16 +12,18 @@ class MainHeader extends ConsumerWidget {
     super.key,
     required this.onRefreshPage,
   });
-  final void Function(Future<void> initialState) onRefreshPage;
+  final void Function({Country? country, Category? category}) onRefreshPage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final allNews = ref.watch(newsProvider);
     final activeCategory = ref.watch(activeCategoryProvider);
-    final activeCountry = ref.watch(activeCountryProvider);
     final headlineNews = ref.watch(headlinesProvider);
     final otherNews = ref.watch(allNewsProvider);
     final headerNews = headlineNews.isNotEmpty ? headlineNews[0] : otherNews[0];
+
+    if (headlineNews.isEmpty && otherNews.isEmpty) {
+      return const SizedBox();
+    }
     return Stack(
       children: [
         CustomFadeinImage(
@@ -66,22 +69,8 @@ class MainHeader extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 4)),
                 onPressed: () {
-                  ref.read(activeCategoryProvider.notifier).setCategory(
-                        categories[i],
-                      );
                   onRefreshPage(
-                    // ref.read(newsProvider.notifier).loadNews(
-                    //       query:
-                    //           '"$activeCountry" ${categories[i].categoryName}',
-                    //     ),
-                    ref.read(apisFetchProvider.notifier).fetchAPIsData(
-                      headlineParams: {
-                        'country': activeCountry,
-                        'category': categories[i].categoryName
-                      },
-                      everythingsQuery:
-                          '"$activeCountry" ${categories[i].categoryName}',
-                    ),
+                    category: categories[i],
                   );
                 },
                 child: Text(

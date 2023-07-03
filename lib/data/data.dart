@@ -6,31 +6,43 @@ import 'package:zena_foru/utils/enums.dart';
 final categories = [
   Category(
     category: KCategory.general,
-    categoryName: 'General',
+    categoryName: 'Home',
+    keyWords: '',
   ),
   Category(
     category: KCategory.business,
     categoryName: 'Business',
+    keyWords:
+        'business AND (forex OR imf OR finance OR debt OR shopify OR dropshipping OR macro OR economics OR corporation OR market)',
   ),
   Category(
     category: KCategory.entertainment,
     categoryName: 'Entertainment',
+    keyWords:
+        'entertainment AND (movie OR music OR "box office" OR billboard OR song OR artist)',
   ),
   Category(
     category: KCategory.health,
     categoryName: 'Health',
+    keyWords:
+        'health AND (food OR drought OR covid OR cancer OR vitamin OR mineral OR water OR clinic OR hospital OR meditation)',
   ),
   Category(
     category: KCategory.science,
     categoryName: 'Science',
+    keyWords: 'science',
   ),
   Category(
     category: KCategory.sports,
     categoryName: 'Sports',
+    keyWords:
+        'sport AND (soccer OR football OR tennis OR "car race" OR athletic)',
   ),
   Category(
     category: KCategory.technology,
     categoryName: 'Technology',
+    keyWords:
+        'technology AND (smartphone OR apple OR tesla OR microsoft OR "electric car" OR samsung OR xiaomi OR gpt OR ai OR programming OR "machine learning")',
   ),
 ];
 

@@ -33,6 +33,27 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
   }) async {
     final httpClient = http.Client();
     try {
+      if (locationData != null) {
+        final url = Uri.parse(
+            'http://api.openweathermap.org/geo/1.0/reverse?lat=${locationData['lat']}&lon=${locationData['lon']}&appid=$openWeatherMapApi');
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          state = {...state, 'location': response.body};
+        } else {
+          print(
+              'Request failed for geolocation fetch with status: ${response.statusCode}.');
+        }
+        final urlWeather = Uri.parse(
+            'https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${locationData['lat']}&lon=${locationData['lon']}&appid=$openWeatherMapApi');
+        final responseWeather = await httpClient.get(urlWeather);
+        print(responseWeather.body);
+        if (responseWeather.statusCode == 200) {
+          state = {...state, 'weather': responseWeather.body};
+        } else {
+          print(
+              'Request failed for weather fetch with status: ${responseWeather.statusCode}.');
+        }
+      }
       if (headlineParams != null) {
         final url = Uri(
           scheme: 'https',
@@ -46,8 +67,9 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
         final response = await httpClient.get(
           url,
           headers: {
-            // HttpHeaders.authorizationHeader: newsApiDawit,
-            HttpHeaders.authorizationHeader: newsApiDavortes,
+            // HttpHeaders.authorizationHeader: newsApiDagi,
+            HttpHeaders.authorizationHeader: newsApiDawit,
+            // HttpHeaders.authorizationHeader: newsApiDavortes,
           },
         );
         if (response.statusCode == 200) {
@@ -66,15 +88,17 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
             'language': 'en',
             'q': everythingsQuery,
             'from': dateFormatter
-                .format(DateTime.now().subtract(const Duration(days: 5))),
+                .format(DateTime.now().subtract(const Duration(days: 3))),
             'sortBy': 'popularity',
           },
         );
         final response = await httpClient.get(
           url,
           headers: {
-            // HttpHeaders.authorizationHeader: newsApiDawit,
-            HttpHeaders.authorizationHeader: newsApiDavortes,
+            // HttpHeaders.authorizationHeader: newsApiDagi,
+
+            HttpHeaders.authorizationHeader: newsApiDawit,
+            // HttpHeaders.authorizationHeader: newsApiDavortes,
           },
         );
         if (response.statusCode == 200) {
@@ -82,17 +106,6 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
         } else {
           print(
               'Request failed for everything fetch with status: ${response.statusCode}.');
-        }
-      }
-      if (locationData != null) {
-        final url = Uri.parse(
-            'http://api.openweathermap.org/geo/1.0/reverse?lat=${locationData['lat']}&lon=${locationData['lon']}&appid=$openWeatherMapApi');
-        final response = await http.get(url);
-        if (response.statusCode == 200) {
-          state = {...state, 'location': response.body};
-        } else {
-          print(
-              'Request failed for geolocation fetch with status: ${response.statusCode}.');
         }
       }
     } finally {
@@ -125,4 +138,19 @@ final nearTownProvider = Provider((ref) {
   final locationName = (convert.jsonDecode(responseBody) as List<dynamic>)
       .cast<Map<String, dynamic>>();
   return locationName;
+});
+
+final weatherProvider = Provider((ref) {
+  final responseBody = ref.watch(apisFetchProvider)['weather'];
+  if (responseBody == null) {
+    return null;
+  }
+  final weatherData =
+      (convert.jsonDecode(responseBody) as Map<String, dynamic>);
+  final weatherTemprature = weatherData['main']['temp'];
+  final weatherIcon = weatherData['weather'][0]['icon'];
+  return {
+    'temp': weatherTemprature,
+    'icon': weatherIcon,
+  };
 });

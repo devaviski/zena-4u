@@ -40,6 +40,9 @@ class App extends StatelessWidget {
           bodyMedium: const TextStyle(
             color: Colors.white,
           ),
+          bodySmall: const TextStyle(
+            color: Colors.white70,
+          ),
           bodyLarge: const TextStyle(
             color: Colors.white,
           ),

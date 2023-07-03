@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location/location.dart';
+import 'package:zena_foru/data/data.dart';
+import 'package:zena_foru/model/category.dart';
+import 'package:zena_foru/model/country.dart';
+import 'package:zena_foru/providers/active_category_provider.dart';
+import 'package:zena_foru/providers/active_country_provider.dart';
 import 'package:zena_foru/providers/http_fetch_provider.dart';
 import 'package:zena_foru/providers/location.dart';
 import 'package:zena_foru/screens/search_screen.dart';
+import 'package:zena_foru/widgets/empty_list.dart';
 import 'package:zena_foru/widgets/main_header.dart';
 import 'package:zena_foru/widgets/main_drawer.dart';
 import 'package:zena_foru/widgets/news_list.dart';
@@ -20,11 +26,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Future<void>? _initialState;
   bool secondRound = false;
   List<Map<String, dynamic>>? cityData;
-
+  Map<String, dynamic>? weatherData;
   @override
   void initState() {
     Future.delayed(
-      const Duration(milliseconds: 1500),
+      const Duration(milliseconds: 1000),
       () {
         final LocationData? location = ref.watch(locationDataProvider);
         _initialState = ref.read(apisFetchProvider.notifier).fetchAPIsData(
@@ -41,9 +47,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.initState();
   }
 
-  void _refreshPage(Future<void> initialState) {
+  void _refreshPage({
+    Country? country,
+    Category? category,
+  }) {
+    final activeCountry = country ?? ref.watch(activeCountryProvider);
+    final activeCategory = category ?? ref.watch(activeCategoryProvider);
+    if (country != null) {
+      ref.read(activeCountryProvider.notifier).setCountry(country);
+    }
+    if (category != null) {
+      ref.read(activeCategoryProvider.notifier).setCategory(category);
+    }
     setState(() {
-      _initialState = initialState;
+      _initialState = ref.read(apisFetchProvider.notifier).fetchAPIsData(
+            headlineParams: activeCategory != categories[0]
+                ? {
+                    'country': activeCountry!.shortName,
+                    'category': activeCategory!.categoryName,
+                  }
+                : {
+                    'country': activeCountry!.shortName,
+                  },
+            everythingsQuery: activeCategory != categories[0]
+                ? '"${activeCountry.fullName}" AND (${activeCategory!.keyWords})'
+                : '"${activeCountry.fullName}"',
+          );
     });
   }
 
@@ -63,11 +92,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           final topHeadlines = ref.watch(headlinesProvider);
           final allNews = ref.watch(allNewsProvider);
           cityData = ref.watch(nearTownProvider);
-
+          weatherData = ref.watch(weatherProvider);
           return Scaffold(
             drawer: MainDrawer(
               onPageRefresh: _refreshPage,
               cityData: cityData,
+              weatherData: weatherData,
             ),
             body: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -100,23 +130,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(
                         height: 24,
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(left: 16, bottom: 2),
-                        width: double.infinity,
-                        child: Text(
-                          'Trending...',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
                       topHeadlines.isEmpty
                           ? const SizedBox()
-                          : SlideshowNews(newNews: topHeadlines.sublist(1)),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      NewsList(
-                        allNews: allNews,
-                      ),
+                          : Column(
+                              children: [
+                                SlideshowNews(newNews: topHeadlines.sublist(1)),
+                                const SizedBox(
+                                  height: 24,
+                                ),
+                              ],
+                            ),
+                      allNews.isEmpty
+                          ? EmptyList(
+                              onPageRefresh: _refreshPage,
+                            ) //to be implemented
+                          : Column(
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.only(left: 8, bottom: 4),
+                                  width: double.infinity,
+                                  child: Text(
+                                    'All Stories...',
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                ),
+                                NewsList(
+                                  allNews: allNews,
+                                ),
+                              ],
+                            ),
                     ],
                   ),
                 ),

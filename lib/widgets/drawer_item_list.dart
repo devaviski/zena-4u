@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zena_foru/model/category.dart';
 import 'package:zena_foru/model/country.dart';
 import 'package:zena_foru/providers/active_country_provider.dart';
 import 'package:zena_foru/widgets/drawer_listtile.dart';
@@ -13,7 +14,7 @@ class DrawerItemList extends ConsumerStatefulWidget {
   });
   final List<Country> countries;
   final String continentName;
-  final void Function(Future<void>) onCountryCahnge;
+  final void Function({Country? country, Category? category}) onCountryCahnge;
 
   @override
   ConsumerState<DrawerItemList> createState() => _DrawerItemListState();
@@ -26,7 +27,7 @@ class _DrawerItemListState extends ConsumerState<DrawerItemList> {
   Widget build(BuildContext context) {
     final activeCountry = ref.watch(activeCountryProvider);
     for (final country in widget.countries) {
-      if (country.shortName == activeCountry) {
+      if (country == activeCountry) {
         _isExpanded = true;
         break;
       }

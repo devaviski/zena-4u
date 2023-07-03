@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zena_foru/model/category.dart';
 import 'package:zena_foru/model/country.dart';
-import 'package:zena_foru/providers/active_category_provider.dart';
 import 'package:zena_foru/providers/active_country_provider.dart';
-import 'package:zena_foru/providers/http_fetch_provider.dart';
 
 class DrawerListTile extends ConsumerWidget {
   const DrawerListTile({
@@ -14,32 +13,20 @@ class DrawerListTile extends ConsumerWidget {
   });
   final Country country;
   final EdgeInsets? leftPadding;
-  final void Function(Future<void>) onCountryCahnge;
+  final void Function({Country? country, Category? category}) onCountryCahnge;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final activeCountry = ref.watch(activeCountryProvider);
-    final activeCategory = ref.watch(activeCategoryProvider);
     return ListTile(
       contentPadding: leftPadding,
       title: Text(country.fullName),
-      selected: country.shortName == activeCountry,
+      selected: country == activeCountry,
       selectedColor: Colors.orange,
       onTap: () {
         Navigator.of(context).pop();
-        ref.read(activeCountryProvider.notifier).setCountry(country.shortName);
         onCountryCahnge(
-          // ref.read(newsProvider.notifier).loadNews(
-          //       query: '"${country.fullName}" +${activeCategory.categoryName}',
-          //     ),
-          ref.read(apisFetchProvider.notifier).fetchAPIsData(
-            headlineParams: {
-              'country': country.shortName,
-              'category': activeCategory.categoryName,
-            },
-            everythingsQuery:
-                '"${country.fullName}" +${activeCategory.categoryName}',
-          ),
+          country: country,
         );
       },
     );
