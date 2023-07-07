@@ -4,8 +4,8 @@ import 'package:zena_foru/model/category.dart';
 import 'package:zena_foru/model/country.dart';
 
 class EmptyList extends StatelessWidget {
-  const EmptyList({super.key, required this.onPageRefresh});
-  final void Function({Country? country, Category? category}) onPageRefresh;
+  const EmptyList({super.key, this.onPageRefresh});
+  final void Function({Country? country, Category? category})? onPageRefresh;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,15 +28,17 @@ class EmptyList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextButton(
-                  onPressed: () {
-                    onPageRefresh(country: usas[0], category: categories[0]);
-                  },
+                  onPressed: onPageRefresh != null
+                      ? () {
+                          onPageRefresh!(
+                              country: usas[0], category: categories[0]);
+                        }
+                      : null,
                   child: const Text('Back to home')),
               TextButton(
-                  onPressed: () {
-                    onPageRefresh();
-                  },
-                  child: const Text('Try Agin')),
+                onPressed: onPageRefresh,
+                child: const Text('Try Agin'),
+              ),
             ],
           )
         ],

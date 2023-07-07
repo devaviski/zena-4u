@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:zena_foru/model/news.dart';
 import 'package:zena_foru/widgets/news_list_item.dart';
@@ -16,7 +18,7 @@ class NewsList extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.only(bottom: 56, left: 4, right: 4),
-            itemCount: allNews.length,
+            itemCount: min(allNews.length, 20),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 2,
               crossAxisCount: width > 1080 ? 3 : 2,
@@ -31,7 +33,7 @@ class NewsList extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 56, left: 4, right: 4),
-          itemCount: allNews.length,
+          itemCount: min(allNews.length, 20),
           itemBuilder: (ctx, i) {
             return NewsListItem(
               news: allNews[i],

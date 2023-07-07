@@ -14,6 +14,15 @@ class NewsListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String newsDate = 'Yesterday';
+    final dateDiff = DateTime.now().day - DateTime.parse(news.publishAt!).day;
+    if (dateDiff == 0) {
+      newsDate = 'Today';
+    } else if (dateDiff < 2) {
+      newsDate = 'Yesterday';
+    } else {
+      newsDate = '$dateDiff days';
+    }
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -70,7 +79,7 @@ class NewsListItem extends StatelessWidget {
                 color:
                     Theme.of(context).colorScheme.background.withOpacity(0.9),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -87,6 +96,19 @@ class NewsListItem extends StatelessWidget {
                       news.description ?? news.publishAt!,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      newsDate,
+                      textAlign: TextAlign.end,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .color!
+                              .withOpacity(0.8)),
                     ),
                   ],
                 ),

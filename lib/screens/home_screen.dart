@@ -4,6 +4,7 @@ import 'package:location/location.dart';
 import 'package:zena_foru/data/data.dart';
 import 'package:zena_foru/model/category.dart';
 import 'package:zena_foru/model/country.dart';
+import 'package:zena_foru/model/news.dart';
 import 'package:zena_foru/providers/active_category_provider.dart';
 import 'package:zena_foru/providers/active_country_provider.dart';
 import 'package:zena_foru/providers/http_fetch_provider.dart';
@@ -27,6 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool secondRound = false;
   List<Map<String, dynamic>>? cityData;
   Map<String, dynamic>? weatherData;
+  List<News>? reservedNews;
   @override
   void initState() {
     Future.delayed(
@@ -90,7 +92,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           );
         } else {
           final topHeadlines = ref.watch(headlinesProvider);
-          final allNews = ref.watch(allNewsProvider);
+          var allNews = reservedNews ?? ref.watch(allNewsProvider);
+          reservedNews = null;
           cityData = ref.watch(nearTownProvider);
           weatherData = ref.watch(weatherProvider);
           return Scaffold(
@@ -106,8 +109,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   snap: true,
                   actions: [
                     IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
+                      onPressed: () async {
+                        reservedNews = allNews;
+                        await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => const SearchScreen(),
                           ),
@@ -130,37 +134,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(
                         height: 24,
                       ),
-                      topHeadlines.isEmpty
+                      topHeadlines == null
                           ? const SizedBox()
-                          : Column(
-                              children: [
-                                SlideshowNews(newNews: topHeadlines.sublist(1)),
-                                const SizedBox(
-                                  height: 24,
+                          : topHeadlines.isEmpty
+                              ? const SizedBox()
+                              : Column(
+                                  children: [
+                                    SlideshowNews(newNews: topHeadlines),
+                                    const SizedBox(
+                                      height: 24,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                      allNews.isEmpty
-                          ? EmptyList(
-                              onPageRefresh: _refreshPage,
-                            ) //to be implemented
-                          : Column(
-                              children: [
-                                Container(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, bottom: 4),
-                                  width: double.infinity,
-                                  child: Text(
-                                    'All Stories...',
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge,
-                                  ),
+                      allNews == null
+                          ? const SizedBox()
+                          : allNews!.isEmpty
+                              ? EmptyList(
+                                  onPageRefresh: _refreshPage,
+                                ) //to be implemented
+                              : Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 8, bottom: 4),
+                                      width: double.infinity,
+                                      child: Text(
+                                        'All Stories...',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                      ),
+                                    ),
+                                    NewsList(
+                                      allNews: allNews,
+                                    ),
+                                  ],
                                 ),
-                                NewsList(
-                                  allNews: allNews,
-                                ),
-                              ],
-                            ),
                     ],
                   ),
                 ),

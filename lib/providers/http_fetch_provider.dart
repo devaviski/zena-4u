@@ -46,7 +46,6 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
         final urlWeather = Uri.parse(
             'https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${locationData['lat']}&lon=${locationData['lon']}&appid=$openWeatherMapApi');
         final responseWeather = await httpClient.get(urlWeather);
-        print(responseWeather.body);
         if (responseWeather.statusCode == 200) {
           state = {...state, 'weather': responseWeather.body};
         } else {
@@ -67,8 +66,8 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
         final response = await httpClient.get(
           url,
           headers: {
-            // HttpHeaders.authorizationHeader: newsApiDagi,
-            HttpHeaders.authorizationHeader: newsApiDawit,
+            HttpHeaders.authorizationHeader: newsApiDagi,
+            // HttpHeaders.authorizationHeader: newsApiDawit,
             // HttpHeaders.authorizationHeader: newsApiDavortes,
           },
         );
@@ -95,9 +94,9 @@ class HttpRequestNotifier extends StateNotifier<Map<String, String>> {
         final response = await httpClient.get(
           url,
           headers: {
-            // HttpHeaders.authorizationHeader: newsApiDagi,
+            HttpHeaders.authorizationHeader: newsApiDagi,
 
-            HttpHeaders.authorizationHeader: newsApiDawit,
+            // HttpHeaders.authorizationHeader: newsApiDawit,
             // HttpHeaders.authorizationHeader: newsApiDavortes,
           },
         );
@@ -119,19 +118,31 @@ final apisFetchProvider =
         (ref) => HttpRequestNotifier());
 
 final headlinesProvider = Provider((ref) {
-  final responseBody = ref.watch(apisFetchProvider)['headlines'];
+  final response = ref.watch(apisFetchProvider);
+  if (!response.containsKey('headlines')) {
+    return null;
+  }
+  final responseBody = response['headlines'];
   final headlines =
       jsonToModel(convert.jsonDecode(responseBody!) as Map<String, dynamic>);
   return headlines;
 });
 final allNewsProvider = Provider((ref) {
-  final responseBody = ref.watch(apisFetchProvider)['everything'];
+  final response = ref.watch(apisFetchProvider);
+  if (!response.containsKey('everything')) {
+    return null;
+  }
+  final responseBody = response['everything'];
   final everythings =
       jsonToModel(convert.jsonDecode(responseBody!) as Map<String, dynamic>);
   return everythings;
 });
 final nearTownProvider = Provider((ref) {
-  final responseBody = ref.watch(apisFetchProvider)['location'];
+  final response = ref.watch(apisFetchProvider);
+  if (!response.containsKey('location')) {
+    return null;
+  }
+  final responseBody = response['location'];
   if (responseBody == null) {
     return null;
   }
@@ -141,7 +152,11 @@ final nearTownProvider = Provider((ref) {
 });
 
 final weatherProvider = Provider((ref) {
-  final responseBody = ref.watch(apisFetchProvider)['weather'];
+  final response = ref.watch(apisFetchProvider);
+  if (!response.containsKey('weather')) {
+    return null;
+  }
+  final responseBody = response['weather'];
   if (responseBody == null) {
     return null;
   }

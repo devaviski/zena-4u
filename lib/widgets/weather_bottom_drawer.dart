@@ -43,10 +43,13 @@ class WeatherBottomDrawer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  TextSpan(text: "c", style: textStyle(context)),
+                  TextSpan(
+                    text: "c",
+                    style: textStyle(context),
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:zena_foru/model/category.dart';
 import 'package:zena_foru/model/country.dart';
 import 'package:zena_foru/providers/active_category_provider.dart';
 import 'package:zena_foru/providers/http_fetch_provider.dart';
+import 'package:zena_foru/screens/news_screen.dart';
 import 'package:zena_foru/widgets/custom_fadein_image.dart';
 
 class MainHeader extends ConsumerWidget {
@@ -19,22 +20,23 @@ class MainHeader extends ConsumerWidget {
     final activeCategory = ref.watch(activeCategoryProvider);
     final headlineNews = ref.watch(headlinesProvider);
     final otherNews = ref.watch(allNewsProvider);
-    final headerNews = headlineNews.isNotEmpty ? headlineNews[0] : otherNews[0];
+    final headerNews =
+        headlineNews!.isNotEmpty ? headlineNews[0] : otherNews![0];
 
-    if (headlineNews.isEmpty && otherNews.isEmpty) {
+    if (headlineNews.isEmpty && otherNews!.isEmpty) {
       return const SizedBox();
     }
     return Stack(
       children: [
         CustomFadeinImage(
-          height: 180,
+          height: 200,
           image: headerNews.urlToImage != null
               ? NetworkImage(headerNews.urlToImage!)
               : null,
         ),
         Container(
           width: double.infinity,
-          height: 180,
+          height: 200,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -86,15 +88,39 @@ class MainHeader extends ConsumerWidget {
         Positioned(
           top: 16,
           left: 16,
-          right: 100,
-          child: Text(
-            headerNews.title!,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                  fontSize: 26,
-                  color: Colors.white,
+          right: 16,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                headerNews.title!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NewsScreen(url: headerNews.url!),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Read more...',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                    height: 1.5,
+                    fontSize: 16,
+                  ),
                 ),
+              ),
+            ],
           ),
         ),
       ],

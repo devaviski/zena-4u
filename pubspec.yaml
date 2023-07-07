@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.18.1
   location: ^4.2.0
   webview_flutter_web: ^0.2.2+1
+  palette_generator: ^0.3.3+2
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets\images\placeholder.jpg
+    - assets\icons\play_store_512.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
