@@ -92,7 +92,7 @@ class _TopHeadlinesState extends State<TopHeadlines> {
                       children: [
                         CustomFadeinImage(
                           height: 250,
-                          image: imageAvailable ? NetworkImage(imageUrl) : null,
+                          imageUrl: imageUrl,
                         ),
                         Stack(
                           children: [

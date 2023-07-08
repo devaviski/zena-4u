@@ -14,22 +14,30 @@ class _MainDrawerHeaderState extends ConsumerState<MainDrawerHeader> {
   @override
   Widget build(BuildContext context) {
     return DrawerHeader(
+      margin: EdgeInsets.zero,
       child: Column(
         children: [
           Expanded(
             child: Container(
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red),
                   borderRadius: BorderRadius.circular(50),
-                  shape: BoxShape.circle,
                 ),
                 child: Image.asset('assets\\icons\\play_store_512.png')),
           ),
           const SizedBox(height: 4),
-          Text('Zena-4u'),
+          Text(
+            'Zena-4u',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 8),
-          Text('Update your information by this application')
+          Container(
+            width: double.infinity,
+            child: Text(
+              'News App prepared for lesson purpose!\n👌👌👌',
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
     );

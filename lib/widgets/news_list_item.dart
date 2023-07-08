@@ -23,6 +23,12 @@ class NewsListItem extends StatelessWidget {
     } else {
       newsDate = '$dateDiff days';
     }
+    late ImageProvider? targetImage;
+    try {
+      targetImage = NetworkImage(news.urlToImage!);
+    } catch (e) {
+      targetImage = null;
+    }
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -41,9 +47,7 @@ class NewsListItem extends StatelessWidget {
           children: [
             CustomFadeinImage(
               height: isGrid ? null : 250,
-              image: news.urlToImage != null
-                  ? NetworkImage(news.urlToImage!)
-                  : null,
+              imageUrl: news.urlToImage,
             ),
             Positioned(
               top: 0,

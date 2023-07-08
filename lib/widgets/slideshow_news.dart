@@ -35,12 +35,7 @@ class SlideshowNews extends StatelessWidget {
                 },
                 child: Stack(
                   children: [
-                    CustomFadeinImage(
-                      height: 150,
-                      image: e.urlToImage != null && e.urlToImage!.length > 3
-                          ? NetworkImage(e.urlToImage!)
-                          : null,
-                    ),
+                    CustomFadeinImage(height: 150, imageUrl: e.urlToImage),
                     Container(
                       height: 150,
                       padding: const EdgeInsets.symmetric(

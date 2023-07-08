@@ -30,9 +30,7 @@ class MainHeader extends ConsumerWidget {
       children: [
         CustomFadeinImage(
           height: 200,
-          image: headerNews.urlToImage != null
-              ? NetworkImage(headerNews.urlToImage!)
-              : null,
+          imageUrl: headerNews.urlToImage,
         ),
         Container(
           width: double.infinity,
